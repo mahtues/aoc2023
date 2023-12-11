@@ -70,9 +70,8 @@ func isSymbol(r rune) bool {
 
 func toNums(matr [][]rune) [][]*int {
 	var (
-		state state = nothing
-		num   *int  = nil
-		nums  [][]*int
+		num  *int = nil
+		nums [][]*int
 	)
 
 	nums = make([][]*int, len(matr))
@@ -81,6 +80,8 @@ func toNums(matr [][]rune) [][]*int {
 	}
 
 	for i, row := range matr {
+		state := nothing
+
 		for j, r := range row {
 			switch state {
 			case nothing:
