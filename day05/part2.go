@@ -10,7 +10,7 @@ import (
 type pair struct{ start, length int }
 
 func part2(scanner *bufio.Scanner) {
-	stt := seed
+	state := seed
 
 	scanner.Scan()
 	parts := strings.Split(scanner.Text(), " ")[1:]
@@ -26,15 +26,15 @@ func part2(scanner *bufio.Scanner) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
-			if stt > seed {
+			if state > seed {
 				next := []pair{}
 				for _, p := range seeds {
 					next = append(next, forward2(p, mappings)...)
 				}
-				// fmt.Printf("[%10s] %+v -> %+v\n", stateString[state(stt)], seeds, next)
+				// fmt.Printf("[%11s] %+v -> %+v\n", stateString[state], seeds, next)
 				seeds = next
 			}
-			stt++
+			state++
 			mappings = []entry{}
 			scanner.Scan() // skip header
 			continue

@@ -10,7 +10,7 @@ import (
 type state int
 
 const (
-	seed = iota
+	seed state = iota
 	seed2soil
 	soil2fert
 	fert2water
