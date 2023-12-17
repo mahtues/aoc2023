@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -37,21 +38,21 @@ func main() {
 			races = append(races, race{t, d})
 		}
 
-		do(races)
+		bar(races)
 	case 2:
 		tj := strings.Join(times[1:], "")
 		dj := strings.Join(dists[1:], "")
 		t, _ := strconv.Atoi(tj)
 		d, _ := strconv.Atoi(dj)
 
-		do([]race{{t, d}})
+		bar([]race{{t, d}})
 	default:
 		flag.Usage()
 		os.Exit(1)
 	}
 }
 
-func do(races []race) {
+func foo(races []race) {
 	mul := 1
 
 	for _, r := range races {
@@ -71,4 +72,37 @@ func do(races []race) {
 
 func dist(hold int, time int) int {
 	return hold * (time - hold)
+}
+
+func bar(races []race) {
+	mul := 1
+
+	// hold -> x, time -> t, dist -> d
+	// hold * (time - hold) > dist
+	// x * (t - x) - d > 0
+	// -x^2 + t * x - d > 0, 1 <= x <= t
+
+	for _, r := range races {
+		sqrtdelta := math.Sqrt(float64(r.time*r.time - 4*r.dist))
+		b := float64(r.time)
+
+		// x1 < x2
+		x1f := (b - sqrtdelta) / 2
+		x2f := (b + sqrtdelta) / 2
+
+		x1 := int(math.Ceil(x1f))
+		x2 := int(math.Floor(x2f))
+
+		if math.Ceil(x1f) == math.Floor(x1f) {
+			x1++
+		}
+
+		if math.Ceil(x2f) == math.Floor(x2f) {
+			x2--
+		}
+
+		mul *= x2 - x1 + 1
+	}
+
+	fmt.Println(mul)
 }
